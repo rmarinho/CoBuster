@@ -26,6 +26,46 @@ namespace CoBuster
 		public List<Double> BlueAvgList = new List<Double>();
 		public int counter = 0;
 
+		public static double FFT(Double[] data, int size, double samplingFrequency)
+		{
+			double temp = 0;
+			double POMP = 0;
+			double frequency;
+			double[] output = new double[2 * data.Length];
+
+			for (int i = 0; i < output.Length; i++)
+				output[i] = 0;
+
+			for (int x = 0; x < data.Length; x++)
+				output[x] = data[x];
+
+
+			//DoubleFft1d fft = new DoubleFft1d(data.Length);
+			//fft.realForward(output);
+			MathNet.Numerics.IntegralTransforms.Fourier.ForwardReal(output, data.Length);
+
+			for (int x = 0; x < 2 * data.Length; x++)
+				output[x] = Math.Abs(output[x]);
+
+			// 12 was chosen because it is a minimum frequency that we think people can get to determine heart rate.
+			for (int p = 35; p < data.Length; p++)
+			{	if (temp < output[p])
+				{
+					temp = output[p];
+					POMP = p;
+
+				}
+			}
+
+			if (POMP < 35)
+			{
+				POMP = 0;
+			}
+
+			frequency = POMP * samplingFrequency / (2 * data.Length);
+			return frequency;
+		}
+
 		public int O2Processsing(byte[] data, Size size)
 		{
 			if (Interlocked.Exchange(ref processing, 1) == 1)
@@ -57,18 +97,17 @@ namespace CoBuster
 				Interlocked.Exchange(ref processing, 0);
 			}
 
-			long endTime = DateTime.Now.Millisecond;
+			long endTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 			double totalTimeInSecs = (endTime - startTime) / 1000d; //to convert time to seconds
 
+			//when 30 seconds of measuring passes do the following " we chose 30 seconds to take half sample since 60 seconds is normally a full sample of the heart beat
 			if (totalTimeInSecs >= 30)
-			{ //when 30 seconds of measuring passes do the following " we chose 30 seconds to take half sample since 60 seconds is normally a full sample of the heart beat
-
-				startTime = DateTime.Now.Millisecond;
+			{ 
+				startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 				SamplingFreq = (counter / totalTimeInSecs);
 				Double[] Red = RedAvgList.ToArray();
 				Double[] Blue = BlueAvgList.ToArray();
-				//MathNet.Numerics.IntegralTransforms.Fourier.FrequencyScale(Red, counter, MathNet.Numerics.IntegralTransforms.FourierOptions.Default);
-				double HRFreq = 1.0; //;  Fft.FFT(Red, counter, SamplingFreq);
+				double HRFreq = FFT(Red, counter, SamplingFreq);
 				double bpm = (int)Math.Ceiling(HRFreq * 60);
 
 				double meanr = sumred / counter;
@@ -102,8 +141,8 @@ namespace CoBuster
 					//ProgO2.setProgress(ProgP);
 					//mainToast = Toast.makeText(getApplicationContext(), "Measurement Failed", Toast.LENGTH_SHORT);
 					//mainToast.show();
-					//startTime = System.currentTimeMillis();
-					//counter = 0;
+					startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+					counter = 0;
 					Interlocked.Exchange(ref processing, 0);
 					return -2;
 				}
@@ -112,7 +151,7 @@ namespace CoBuster
 
 			if (o2 != 0)
 			{
-				
+
 
 			}
 

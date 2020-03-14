@@ -26,7 +26,7 @@ namespace CoBuster
 						v = (0xff & yuv420sp[uvp++]) - 128;
 						u = (0xff & yuv420sp[uvp++]) - 128;
 					}
-					int y1192 = 1192 * y;
+					int y1192 = 1192 * y;		
 					int r = (y1192 + 1634 * v);
 					int g = (y1192 - 833 * v - 400 * u);
 					int b = (y1192 + 2066 * u);
