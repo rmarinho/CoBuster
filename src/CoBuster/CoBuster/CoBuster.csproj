@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="4.7.0.432-nightly" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.5.1" />
+    <PackageReference Include="MathNet.Numerics" Version="4.9.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
