@@ -3,9 +3,19 @@
              xmlns:controls="clr-namespace:CoBuster.Controls"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CoBuster.Views.CameraPage">
     <ContentPage.Content>
-         <Grid>
-            <controls:CameraView x:Name="cameraView" WidthRequest="320" HeightRequest="500" BackgroundColor="Brown"></controls:CameraView>
-            <Button x:Name="buttonShot" Text="Shoot" Clicked="buttonShot_Clicked"></Button>
+        <Grid>
+           
+            <controls:CameraView x:Name="cameraView"
+                                 FlashMode="Torch"
+                                
+                                 IsEnabled="{Binding CameraVisible}"/>
+             <Frame IsVisible="{Binding InstructionsVisible}" BackgroundColor="White">
+                <StackLayout>
+
+                    <Label Text="{Binding Instructions}"/>
+                    <Button x:Name="btnStart" Text="Start" Command="{Binding StartMeasuringCommand }"/>
+                </StackLayout>
+            </Frame>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
