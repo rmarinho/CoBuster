@@ -7,6 +7,8 @@ namespace CoBuster.Controls
 {
 	public class CameraView : View
 	{
+		public event EventHandler<PreviewEventArgs> PreviewAvailabe;
+
 		public event EventHandler<MediaCapturedEventArgs> MediaCaptured;
 
 		public event EventHandler<string> MediaCaptureFailed;
@@ -111,12 +113,20 @@ namespace CoBuster.Controls
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public void RaiseMediaCaptureFailed(string message) => MediaCaptureFailed?.Invoke(this, message);
 
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public void RaisePreviewAvailable(PreviewEventArgs args) => PreviewAvailabe?.Invoke(this, args);
+
 		public void Shutter() => ShutterClicked?.Invoke(this, EventArgs.Empty);
 
 
 		public CameraView()
 		{
 
+		}
+
+		public class PreviewEventArgs : EventArgs
+		{
+			public byte[] Data { get; set; }
 		}
 
 		public class MediaCapturedEventArgs : EventArgs

@@ -29,6 +29,7 @@ namespace CoBuster.iOS.Controls
 				Control.Busy += OnBusy;
 				Control.Available += OnAvailability;
 				Control.FinishCapture += FinishCapture;
+				Control.FrameAvailable += FrameAvailable;
 			}
 
 			if (e.OldElement != null)
@@ -40,6 +41,17 @@ namespace CoBuster.iOS.Controls
 			{
 				e.NewElement.ShutterClicked += HandleShutter;
 			}
+
+			Control?.SwitchFlash(Element.FlashMode);
+			Control?.UpdateIsEnabled(Element.IsEnabled);
+		}
+
+		void FrameAvailable(object sender, byte[] e)
+		{
+			Element.RaisePreviewAvailable(new PreviewEventArgs
+			{
+				Data = e
+			});
 		}
 
 		void OnBusy(object sender, bool busy) => Element.IsBusy = busy;
@@ -150,6 +162,11 @@ namespace CoBuster.iOS.Controls
 					break;
 				case nameof(CameraView.Zoom):
 					Control.Zoom = Element.Zoom;
+					break;
+				case nameof(VisualElement.IsEnabled):
+					{
+						Control.UpdateIsEnabled(Element.IsEnabled);
+					}
 					break;
 			}
 		}

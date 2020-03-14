@@ -6,11 +6,12 @@ using Foundation;
 using UIKit;
 using AVFoundation;
 using CoreGraphics;
-using CoreMedia;
 
 using Xamarin.Forms.Internals;
 using Xamarin.Forms;
 using static CoBuster.Controls.CameraView;
+using CoreVideo;
+using CoreFoundation;
 
 namespace CoBuster.iOS.Controls
 {
@@ -23,6 +24,9 @@ namespace CoBuster.iOS.Controls
 		AVCaptureStillImageOutput _imageOutput;
 		AVCapturePhotoOutput _photoOutput;
 		AVCaptureMovieFileOutput _videoOutput;
+		AVCaptureVideoDataOutput _videoDataOutput;
+		OutputRecorder _outputRecorder;
+		DispatchQueue _queue;
 		AVCaptureConnection _captureConnection;
 		AVCaptureDevice _device;
 		bool _isBusy;
@@ -30,6 +34,7 @@ namespace CoBuster.iOS.Controls
 		CameraFlashMode _flashMode;
 		readonly float _imgScale = 1f;
 
+		public event EventHandler<byte[]> FrameAvailable;
 		public event EventHandler<bool> Busy;
 		public event EventHandler<bool> Available;
 		public event EventHandler<Tuple<NSObject, NSError>> FinishCapture;
@@ -60,6 +65,8 @@ namespace CoBuster.iOS.Controls
 			AddConstraints(NSLayoutConstraint.FromVisualFormat("V:|[mainView]|", NSLayoutFormatOptions.DirectionLeftToRight, null, new NSDictionary("mainView", _mainView)));
 			AddConstraints(NSLayoutConstraint.FromVisualFormat("H:|[mainView]|", NSLayoutFormatOptions.AlignAllTop, null, new NSDictionary("mainView", _mainView)));
 		}
+
+
 
 		void SetStartOrientation()
 		{
@@ -164,6 +171,19 @@ namespace CoBuster.iOS.Controls
 			image = UIGraphics.GetImageFromCurrentImageContext();
 			UIGraphics.EndImageContext();
 			return image;
+		}
+
+		internal void UpdateIsEnabled(bool isEnabled)
+		{
+			if(isEnabled)
+			{
+				InitializeCamera();
+				SwitchFlash();
+			}
+			else
+			{
+				_captureSession.StopRunning();
+			}
 		}
 
 		public override void Draw(CGRect rect)
@@ -450,6 +470,21 @@ namespace CoBuster.iOS.Controls
 
 				_captureSession.BeginConfiguration();
 
+				_videoDataOutput = new AVCaptureVideoDataOutput()
+				{
+					WeakVideoSettings = new CVPixelBufferAttributes()
+					{
+						PixelFormatType = CVPixelFormatType.CV32BGRA
+					}.Dictionary,
+				};
+
+				_queue = new CoreFoundation.DispatchQueue("myQueue");
+				_outputRecorder = new OutputRecorder(this);
+				_videoDataOutput.SetSampleBufferDelegate(_outputRecorder, _queue);
+
+				if (_captureSession.CanAddOutput(_videoDataOutput))
+					_captureSession.AddOutput(_videoDataOutput);
+
 				if (_captureSession.CanAddInput(_input))
 					_captureSession.AddInput(_input);
 				if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
@@ -519,29 +554,10 @@ namespace CoBuster.iOS.Controls
 			ClearCaptureSession();
 			base.Dispose(disposing);
 		}
-	}
 
-	class PhotoCaptureDelegate : NSObject, IAVCapturePhotoCaptureDelegate
-	{
-		public Action<NSData, NSError> OnFinishCapture;
-		public Action WillCapturePhotoAnimation;
-
-		NSData photoData;
-
-		[Export("captureOutput:willCapturePhotoForResolvedSettings:")]
-		public void WillCapturePhoto(AVCapturePhotoOutput captureOutput, AVCaptureResolvedPhotoSettings resolvedSettings) => WillCapturePhotoAnimation();
-
-		[Export("captureOutput:didFinishProcessingPhotoSampleBuffer:previewPhotoSampleBuffer:resolvedSettings:bracketSettings:error:")]
-		public void DidFinishProcessingPhoto(AVCapturePhotoOutput captureOutput, CMSampleBuffer photoSampleBuffer, CMSampleBuffer previewPhotoSampleBuffer, AVCaptureResolvedPhotoSettings resolvedSettings, AVCaptureBracketedStillImageSettings bracketSettings, NSError error)
+		internal void RaiseFrameAvailable(byte[] managedArray)
 		{
-			if (photoSampleBuffer != null)
-				photoData = AVCapturePhotoOutput.GetJpegPhotoDataRepresentation(photoSampleBuffer, previewPhotoSampleBuffer);
-			else
-				Console.WriteLine($"Error capturing photo: {error.LocalizedDescription}");
+			FrameAvailable?.Invoke(this, managedArray);
 		}
-
-		[Export("captureOutput:didFinishCaptureForResolvedSettings:error:")]
-		public void DidFinishCapture(AVCapturePhotoOutput captureOutput, AVCaptureResolvedPhotoSettings resolvedSettings, NSError error)
-			=> OnFinishCapture(photoData, error);
 	}
 }
