@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:controls="clr-namespace:CoBuster.Controls"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CoBuster.Views.CameraPage">
+    <ContentPage.Content>
+         <Grid>
+            <controls:CameraView x:Name="cameraView" WidthRequest="320" HeightRequest="500" BackgroundColor="Brown"></controls:CameraView>
+            <Button x:Name="buttonShot" Text="Shoot" Clicked="buttonShot_Clicked"></Button>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
