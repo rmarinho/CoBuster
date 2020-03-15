@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AppCenter.Analytics;
 using Xamarin.Forms;
 
 namespace CoBuster.ViewModels
@@ -20,6 +21,7 @@ namespace CoBuster.ViewModels
 			_vitalSignsProcessing = new VitalSignsProcessing();
 			CameraVisible = true;
 			InstructionsVisible = false;
+			Analytics.TrackEvent("Star measuring o2");
 		}
 
 		internal void PreviewCallback(byte[] data, Size size)
@@ -35,7 +37,10 @@ namespace CoBuster.ViewModels
 				Instructions = $"Your results for O2 saturation is {o2}";
 				CameraVisible = false;
 				InstructionsVisible = true;
+				Analytics.TrackEvent($"Measuring success o2 results {o2}");
 			}
+			
+			_vitalSignsProcessing = null;
 		}
 
 		string instructions = string.Empty;

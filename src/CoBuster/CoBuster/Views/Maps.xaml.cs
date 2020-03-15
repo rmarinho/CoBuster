@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -17,6 +19,8 @@ namespace CoBuster.Views
 		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
+			Analytics.TrackEvent($"Visiting Maps Page");
+
 			await GoTouserLocation();
 		}
 
@@ -33,25 +37,29 @@ namespace CoBuster.Views
 
 				if (location != null)
 				{
-					var userPosition = new Xamarin.Forms.Maps.Position(location.Latitude, location.Longitude);
+					var userPosition = new Position(location.Latitude, location.Longitude);
 					map.MoveToRegion(MapSpan.FromCenterAndRadius(userPosition, Distance.FromMeters(100)));
-					Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+					Analytics.TrackEvent($"GotLocation Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
 				}
 			}
 			catch (FeatureNotSupportedException fnsEx)
 			{
+				Crashes.TrackError(fnsEx);
 				// Handle not supported on device exception
 			}
 			catch (FeatureNotEnabledException fneEx)
 			{
+				Crashes.TrackError(fneEx);
 				// Handle not enabled on device exception
 			}
 			catch (PermissionException pEx)
 			{
+				Crashes.TrackError(pEx);
 				// Handle permission exception
 			}
 			catch (Exception ex)
 			{
+				Crashes.TrackError(ex);
 				// Unable to get location
 			}
 		}

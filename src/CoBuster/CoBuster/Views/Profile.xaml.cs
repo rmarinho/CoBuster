@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CoBuster.ViewModels;
+using Microsoft.AppCenter.Analytics;
 using Xamarin.Forms;
 
 namespace CoBuster.Views
@@ -13,6 +14,12 @@ namespace CoBuster.Views
 		{
 			InitializeComponent();
 			BindingContext = viewModel = new ProfileViewModel();
+		}
+
+		protected override void OnAppearing()
+		{
+			Analytics.TrackEvent($"Visiting Profile Page");
+			base.OnAppearing();
 		}
 	}
 }

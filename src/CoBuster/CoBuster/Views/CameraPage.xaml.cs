@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using CoBuster.ViewModels;
+using Microsoft.AppCenter.Analytics;
 using Xamarin.Forms;
 
 namespace CoBuster.Views
@@ -21,6 +22,12 @@ namespace CoBuster.Views
 			cameraView.PreviewAvailabe += (_, e) =>
 					viewModel.PreviewCallback(e.Data, e.PreviewSize);
 
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			Analytics.TrackEvent($"Visiting Checks Page");
 		}
 	}
 }
