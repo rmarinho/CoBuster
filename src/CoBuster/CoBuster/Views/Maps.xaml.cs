@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -13,7 +14,18 @@ namespace CoBuster.Views
 			InitializeComponent();
 		}
 
+		protected override async void OnAppearing()
+		{
+			base.OnAppearing();
+			await GoTouserLocation();
+		}
+
 		async void ImageButton_Clicked(System.Object sender, System.EventArgs e)
+		{
+			await GoTouserLocation();
+		}
+
+		async Task GoTouserLocation()
 		{
 			try
 			{
