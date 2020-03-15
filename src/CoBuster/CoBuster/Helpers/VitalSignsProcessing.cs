@@ -49,7 +49,8 @@ namespace CoBuster
 
 			// 12 was chosen because it is a minimum frequency that we think people can get to determine heart rate.
 			for (int p = 35; p < data.Length; p++)
-			{	if (temp < output[p])
+			{
+				if (temp < output[p])
 				{
 					temp = output[p];
 					POMP = p;
@@ -78,9 +79,9 @@ namespace CoBuster
 			double RedAvg;
 			double BlueAvg;
 
-			RedAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, height, width, 1); //1 stands for red intensity, 2 for blue, 3 for green
+			RedAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, width, height, 1); //1 stands for red intensity, 2 for blue, 3 for green
 			sumred = sumred + RedAvg;
-			BlueAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, height, width, 2); //1 stands for red intensity, 2 for blue, 3 for green
+			BlueAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, width, height, 2); //1 stands for red intensity, 2 for blue, 3 for green
 			sumblue = sumblue + BlueAvg;
 
 			RedAvgList.Add(RedAvg);
@@ -102,7 +103,7 @@ namespace CoBuster
 
 			//when 30 seconds of measuring passes do the following " we chose 30 seconds to take half sample since 60 seconds is normally a full sample of the heart beat
 			if (totalTimeInSecs >= 30)
-			{ 
+			{
 				startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 				SamplingFreq = (counter / totalTimeInSecs);
 				Double[] Red = RedAvgList.ToArray();

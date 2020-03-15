@@ -19,7 +19,7 @@ namespace CoBuster.Views
 			cameraView.OnAvailable += (_, available) => btnStart.IsEnabled = available;
 
 			cameraView.PreviewAvailabe += (_, e) =>
-					viewModel.PreviewCallback(e.Data, new Size(cameraView.Width, cameraView.Height));
+					viewModel.PreviewCallback(e.Data, e.PreviewSize);
 
 		}
 	}

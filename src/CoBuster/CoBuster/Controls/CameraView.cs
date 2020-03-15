@@ -126,6 +126,7 @@ namespace CoBuster.Controls
 
 		public class PreviewEventArgs : EventArgs
 		{
+			public Size PreviewSize { get; set; }
 			public byte[] Data { get; set; }
 		}
 
