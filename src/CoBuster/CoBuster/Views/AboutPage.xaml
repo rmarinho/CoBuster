@@ -28,7 +28,7 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="AppName" FontAttributes="Bold" FontSize="22" />
+                                <Span Text="CoBuster" FontAttributes="Bold" FontSize="22" />
                                 <Span Text=" " />
                                 <Span Text="1.0" ForegroundColor="{StaticResource LightTextColor}" />
                             </FormattedString.Spans>
@@ -39,7 +39,7 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="This app is written in C# and native APIs using the" />
+                                <Span Text="This app is combined effort of " />
                                 <Span Text=" " />
                                 <Span Text="Xamarin Platform" FontAttributes="Bold" />
                                 <Span Text="." />
