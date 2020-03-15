@@ -46,12 +46,9 @@ namespace CoBuster.iOS.Controls
 			Control?.UpdateIsEnabled(Element.IsEnabled);
 		}
 
-		void FrameAvailable(object sender, byte[] e)
+		void FrameAvailable(object sender, PreviewEventArgs e)
 		{
-			Element.RaisePreviewAvailable(new PreviewEventArgs
-			{
-				Data = e
-			});
+			Element.RaisePreviewAvailable(e);
 		}
 
 		void OnBusy(object sender, bool busy) => Element.IsBusy = busy;
@@ -134,6 +131,13 @@ namespace CoBuster.iOS.Controls
 
 		protected override void Dispose(bool disposing)
 		{
+			if(Control != null)
+			{
+				Control.Busy -= OnBusy;
+				Control.Available -= OnAvailability;
+				Control.FinishCapture -= FinishCapture;
+				Control.FrameAvailable -= FrameAvailable;
+			}
 			Control?.Dispose();
 			base.Dispose(disposing);
 		}

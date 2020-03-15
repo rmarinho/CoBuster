@@ -34,7 +34,7 @@ namespace CoBuster.iOS.Controls
 		CameraFlashMode _flashMode;
 		readonly float _imgScale = 1f;
 
-		public event EventHandler<byte[]> FrameAvailable;
+		public event EventHandler<PreviewEventArgs> FrameAvailable;
 		public event EventHandler<bool> Busy;
 		public event EventHandler<bool> Available;
 		public event EventHandler<Tuple<NSObject, NSError>> FinishCapture;
@@ -175,7 +175,7 @@ namespace CoBuster.iOS.Controls
 
 		internal void UpdateIsEnabled(bool isEnabled)
 		{
-			if(isEnabled)
+			if (isEnabled)
 			{
 				InitializeCamera();
 				SwitchFlash();
@@ -557,7 +557,11 @@ namespace CoBuster.iOS.Controls
 
 		internal void RaiseFrameAvailable(byte[] managedArray)
 		{
-			FrameAvailable?.Invoke(this, managedArray);
+			FrameAvailable?.Invoke(this, new PreviewEventArgs
+			{
+				Data = managedArray,
+				PreviewSize = new Size(Bounds.Width, Bounds.Height)
+			});
 		}
 	}
 }
