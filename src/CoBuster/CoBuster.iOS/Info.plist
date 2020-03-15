@@ -29,7 +29,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>CoBuster</string>
 	<key>CFBundleIdentifier</key>
-	<string>net.ruimarinho.CoBuster</string>
+	<string>net.ruimarinho.cobuster</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
