@@ -10,6 +10,10 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.5.1" />
     <PackageReference Include="MathNet.Numerics" Version="4.9.0" />
     <PackageReference Include="Xamarin.Forms.Maps" Version="4.7.0.432-nightly" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AppCenter.Distribute" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AppCenter.Push" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
