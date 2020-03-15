@@ -10,7 +10,7 @@ namespace CoBuster.ViewModels
 		public Command StartMeasuringCommand { get; set; }
 		public CameraViewModel()
 		{
-			Title = "CAMERA";
+			Title = "Check Vital Signs";
 			Instructions = "Please cover your phone camera with your index finger. Wait around for 40 seconds to get result";
 			StartMeasuringCommand = new Command(() => StarMeasuring());
 		}
@@ -36,7 +36,6 @@ namespace CoBuster.ViewModels
 				CameraVisible = false;
 				InstructionsVisible = true;
 			}
-
 		}
 
 		string instructions = string.Empty;

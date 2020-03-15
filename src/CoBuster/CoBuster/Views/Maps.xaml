@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             Shell.NavBarIsVisible="False"
+              xmlns:helpers="clr-namespace:CoBuster.Helpers"
+             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CoBuster.Views.Maps">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="0.3*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="110"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <maps:Map x:Name="map" Grid.ColumnSpan="2" Grid.RowSpan="2" IsShowingUser="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"></maps:Map>
+
+        <SearchBar Grid.Column="0" Margin="20,50,0,0" VerticalOptions="Center" HeightRequest="48    "></SearchBar>
+        <ImageButton BackgroundColor="White" Margin="0,50,20,0" Grid.Column="1"
+                     Padding="10,2,10,2"
+                     VerticalOptions="Center"
+                     Clicked="ImageButton_Clicked"
+                     HorizontalOptions="Center">
+            <ImageButton.Source>
+                <FontImageSource Color="#9f9ea3" Glyph="{x:Static helpers:MaterialIcons.MapMarkerCircle}"
+                                 FontFamily="{StaticResource MaterialFontFamily}"/>
+            </ImageButton.Source>
+        </ImageButton>
+    </Grid>
+</ContentPage>

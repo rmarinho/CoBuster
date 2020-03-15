@@ -1,35 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Shell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:d="http://xamarin.com/schemas/2014/forms/design" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" xmlns:local="clr-namespace:CoBuster.Views" Title="CoBuster" x:Class="CoBuster.AppShell">
+<Shell xmlns="http://xamarin.com/schemas/2014/forms"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+       xmlns:local="clr-namespace:CoBuster.Views"
+       xmlns:helpers="clr-namespace:CoBuster.Helpers"
+       Title="CoBuster" x:Class="CoBuster.AppShell"
+       Visual="Material">
     <!-- 
         Styles and Resources 
     -->
     <Shell.Resources>
         <ResourceDictionary>
-            <Color x:Key="NavigationPrimary">#2196F3</Color>
+            <Color x:Key="NavigationPrimary">#efefef</Color>
             <Style x:Key="BaseStyle" TargetType="Element">
                 <Setter Property="Shell.BackgroundColor" Value="{StaticResource NavigationPrimary}" />
-                <Setter Property="Shell.ForegroundColor" Value="White" />
-                <Setter Property="Shell.TitleColor" Value="White" />
+                <Setter Property="Shell.ForegroundColor" Value="DarkGray" />
+                <Setter Property="Shell.TitleColor" Value="Black" />
                 <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
                 <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
                 <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
-                <Setter Property="Shell.TabBarForegroundColor" Value="White" />
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF" />
-                <Setter Property="Shell.TabBarTitleColor" Value="White" />
+                <Setter Property="Shell.TabBarForegroundColor" Value="#3455ad"  />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#9f9ea3" />
+                <Setter Property="Shell.TabBarTitleColor" Value="#3455ad" />
             </Style>
             <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
         </ResourceDictionary>
     </Shell.Resources>
-    <!-- Your Pages -->
     <TabBar>
-        <Tab Title="Camera" Icon="tab_feed.png">
-            <ShellContent ContentTemplate="{DataTemplate local:CameraPage}" />
-        </Tab>
-        <Tab Title="Browse" Icon="tab_feed.png">
+        <Tab Title="Home">
+             <Tab.Icon >
+                <FontImageSource Glyph="{x:Static helpers:MaterialIcons.Home}"
+                                 FontFamily="{StaticResource MaterialFontFamily}"/>
+            </Tab.Icon>
             <ShellContent ContentTemplate="{DataTemplate local:ItemsPage}" />
         </Tab>
-        <Tab Title="About" Icon="tab_about.png">
-            <ShellContent ContentTemplate="{DataTemplate local:AboutPage}" />
+        <Tab Title="Maps">
+             <Tab.Icon >
+                <FontImageSource Glyph="{x:Static helpers:MaterialIcons.Map}"
+                                 FontFamily="{StaticResource MaterialFontFamily}"/>
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:Maps}" />
+        </Tab>
+        <Tab Title="New">
+             <Tab.Icon >
+                <FontImageSource Glyph="{x:Static helpers:MaterialIcons.Plus}"
+                                 FontFamily="{StaticResource MaterialFontFamily}"/>
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:NewItemPage}" />
+        </Tab>
+        <Tab Title="Check">
+            <Tab.Icon >
+                <FontImageSource Glyph="{x:Static helpers:MaterialIcons.Camera}"
+                                 FontFamily="{StaticResource MaterialFontFamily}"/>
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:CameraPage}" />
+        </Tab>
+        <Tab Title="Profile" >
+             <Tab.Icon >
+                <FontImageSource Glyph="{x:Static helpers:MaterialIcons.Account}"
+                                 FontFamily="{StaticResource MaterialFontFamily}"/>
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:Profile}" Title="Profile" />
         </Tab>
     </TabBar>
     <!-- Optional Templates 

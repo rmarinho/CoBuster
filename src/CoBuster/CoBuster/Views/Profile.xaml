@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage Title="{Binding Title}" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CoBuster.Views.Profile">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="About" Command="{Binding GoToAboutPage}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <Grid>
+        <Label Text="This is the profile page for age, weight"></Label>
+    </Grid>
+</ContentPage>
