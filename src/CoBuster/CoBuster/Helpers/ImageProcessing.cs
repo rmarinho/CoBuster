@@ -4,6 +4,16 @@ namespace CoBuster
 {
 	public static class ImageProcessing
 	{
+		public static byte[] Clone(byte[] data)
+		{
+			return data == null ? null : (byte[])data.Clone();
+		}
+
+		public static int[] Clone(int[] data)
+		{
+			return data == null ? null : (int[])data.Clone();
+		}
+
 		static int DecodeYUV420SPtoRedBlueGreenSum(byte[] yuv420sp, int width, int height, int type)
 		{
 			if (yuv420sp == null) return 0;

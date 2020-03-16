@@ -78,15 +78,14 @@ namespace CoBuster
 			{
 				return -1;
 			}
-
 			
 			int width = (int)size.Width;
 			int height = (int)size.Height;
 			double RedAvg;
 			double GreenAvg;
 
-			GreenAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, height, width, 3); //1 stands for red intensity, 2 for blue, 3 for green
-			RedAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, height, width, 1); //1 stands for red intensity, 2 for blue, 3 for green
+			GreenAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(ImageProcessing.Clone(data), height, width, 3); //1 stands for red intensity, 2 for blue, 3 for green
+			RedAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(ImageProcessing.Clone(data), height, width, 1); //1 stands for red intensity, 2 for blue, 3 for green
 			GreenAvgList.Add(GreenAvg);
 			RedAvgList.Add(RedAvg);
 
@@ -95,6 +94,7 @@ namespace CoBuster
 			//To check if we got a good red intensity to process if not return to the condition and set it again until we get a good red intensity
 			if (RedAvg < 200)
 			{
+				counter = 0;
 				//inc = 0;
 				//ProgP = inc;
 				//ProgO2.setProgress(ProgP);
@@ -139,6 +139,7 @@ namespace CoBuster
 					bufferAvgB = bpm1;
 				}
 
+				Beats = (int)bufferAvgB;
 			}
 
 			if (Beats != 0)
@@ -169,15 +170,17 @@ namespace CoBuster
 			double RedAvg;
 			double BlueAvg;
 
-			RedAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, width, height, 1); //1 stands for red intensity, 2 for blue, 3 for green
+			RedAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(ImageProcessing.Clone(data), width, height, 1); //1 stands for red intensity, 2 for blue, 3 for green
 			sumred = sumred + RedAvg;
-			BlueAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, width, height, 2); //1 stands for red intensity, 2 for blue, 3 for green
+			BlueAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(ImageProcessing.Clone(data), width, height, 2); //1 stands for red intensity, 2 for blue, 3 for green
 			sumblue = sumblue + BlueAvg;
 
 			RedAvgList.Add(RedAvg);
 			BlueAvgList.Add(BlueAvg);
 
 			++counter; //countes number of frames in 30 seconds
+
+			System.Diagnostics.Debug.WriteLine($"Processing {size.Width} {size.Height} red avg {RedAvg}");
 
 			//To check if we got a good red intensity to process if not return to the condition and set it again until we get a good red intensity
 			if (RedAvg < 200)
