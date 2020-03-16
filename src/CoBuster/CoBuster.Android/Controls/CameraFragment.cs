@@ -584,7 +584,7 @@ namespace CoBuster.Droid.Controls
 
 				_sessionBuilder.Set(CaptureRequest.ControlMode, (int)ControlMode.Auto);
 				_sessionBuilder.Set(CaptureRequest.ControlAeMode, (int)ControlAEMode.On);
-				if (cameraTemplate == CameraTemplate.Record)
+				if ((cameraTemplate == CameraTemplate.Record || _flashMode == FlashMode.Torch) && Element.IsEnabled)
 					_sessionBuilder.Set(CaptureRequest.FlashMode, (int)_flashMode);
 
 				_session.SetRepeatingRequest(_sessionBuilder.Build(), null, _backgroundHandler);
@@ -716,6 +716,8 @@ namespace CoBuster.Droid.Controls
 		{
 			UpdateBackgroundColor();
 			UpdateCaptureOptions();
+			SetFlash();
+
 			await RetrieveCameraDevice();
 		}
 

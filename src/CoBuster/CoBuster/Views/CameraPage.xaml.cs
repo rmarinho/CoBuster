@@ -27,6 +27,7 @@ namespace CoBuster.Views
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
+		
 			Analytics.TrackEvent($"Visiting Checks Page");
 		}
 	}

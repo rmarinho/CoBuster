@@ -5,12 +5,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CoBuster.Views.CameraPage">
     <ContentPage.Content>
         <Grid>
-           
+
             <controls:CameraView x:Name="cameraView"
                                  FlashMode="Torch"
-                                
                                  IsEnabled="{Binding CameraVisible}"/>
-             <Frame IsVisible="{Binding InstructionsVisible}" BackgroundColor="White">
+
+            <StackLayout HorizontalOptions="Center"
+                         VerticalOptions="End" WidthRequest="300"
+                         IsVisible="{Binding CameraVisible}">
+                <controls:TimerView x:Name="timerView" AutoStart="True"
+                                    WidthRequest="300" HeightRequest="30"
+                                    >
+                    <controls:TimerView.ProgressBar>
+                        <BoxView BackgroundColor="Maroon" />
+                    </controls:TimerView.ProgressBar>
+                    <controls:TimerView.TrackBar>
+                        <BoxView BackgroundColor="Gray" />
+                    </controls:TimerView.TrackBar>
+                    <controls:TimerView.Time>
+                        <x:TimeSpan>0:0:35</x:TimeSpan>
+                    </controls:TimerView.Time>
+                </controls:TimerView>
+                <Label Grid.Row="1" FontSize="30"
+                Text="{Binding Path=RemainingTime, StringFormat='{0:%s}:{0:%f}', Source={x:Reference timerView}}" 
+                HorizontalOptions="Center" />
+            </StackLayout>
+
+            <Frame IsVisible="{Binding InstructionsVisible}" BackgroundColor="White">
                 <StackLayout>
 
                     <Label Text="{Binding Instructions}"/>

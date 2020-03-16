@@ -39,7 +39,7 @@ namespace CoBuster.Views
 				{
 					var userPosition = new Position(location.Latitude, location.Longitude);
 					map.MoveToRegion(MapSpan.FromCenterAndRadius(userPosition, Distance.FromMeters(100)));
-					Analytics.TrackEvent($"GotLocation Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+					Analytics.TrackEvent($"GotLocation");
 				}
 			}
 			catch (FeatureNotSupportedException fnsEx)
