@@ -21,9 +21,14 @@ namespace CoBuster
 		double sumblue = 0;
 		public int o2;
 
+		//Beats variable
+		public int Beats = 0;
+		public double bufferAvgB = 0;
+
 		//Arraylist
 		public List<Double> RedAvgList = new List<Double>();
 		public List<Double> BlueAvgList = new List<Double>();
+		public List<Double> GreenAvgList = new List<Double>();
 		public int counter = 0;
 
 		public static double FFT(Double[] data, int size, double samplingFrequency)
@@ -65,6 +70,91 @@ namespace CoBuster
 
 			frequency = POMP * samplingFrequency / (2 * data.Length);
 			return frequency;
+		}
+
+		public int HRProcesssing(byte[] data, Size size)
+		{
+			if (Interlocked.Exchange(ref processing, 1) == 1)
+			{
+				return -1;
+			}
+
+			
+			int width = (int)size.Width;
+			int height = (int)size.Height;
+			double RedAvg;
+			double GreenAvg;
+
+			GreenAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, height, width, 3); //1 stands for red intensity, 2 for blue, 3 for green
+			RedAvg = ImageProcessing.DecodeYUV420SPtoRedBlueGreenAvg(data, height, width, 1); //1 stands for red intensity, 2 for blue, 3 for green
+			GreenAvgList.Add(GreenAvg);
+			RedAvgList.Add(RedAvg);
+
+			++counter; //countes number of frames in 30 seconds
+			System.Diagnostics.Debug.WriteLine($"Processing {size.Width} {size.Height} red avg {RedAvg}");
+			//To check if we got a good red intensity to process if not return to the condition and set it again until we get a good red intensity
+			if (RedAvg < 200)
+			{
+				//inc = 0;
+				//ProgP = inc;
+				//ProgO2.setProgress(ProgP);
+				Interlocked.Exchange(ref processing, 0);
+			}
+
+
+			long endTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+			double totalTimeInSecs = (endTime - startTime) / 1000d; //to convert time to seconds
+			if (totalTimeInSecs >= 30)
+			{
+				startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+				SamplingFreq = (counter / totalTimeInSecs);
+				Double[] Green = GreenAvgList.ToArray();
+				Double[] Red = RedAvgList.ToArray();
+
+				SamplingFreq = (counter / totalTimeInSecs); //calculating the sampling frequency
+
+				double HRFreq = FFT(Green, counter, SamplingFreq); // send the green array and get its fft then return the amount of heartrate per second
+				double bpm = (int)Math.Ceiling(HRFreq * 60);
+				double HR1Freq = FFT(Red, counter, SamplingFreq);  // send the red array and get its fft then return the amount of heartrate per second
+				double bpm1 = (int)Math.Ceiling(HR1Freq * 60);
+
+				if ((bpm > 45 || bpm < 200))
+				{
+					if ((bpm1 > 45 || bpm1 < 200))
+					{
+
+						bufferAvgB = (bpm + bpm1) / 2;
+					}
+					else
+					{
+						bufferAvgB = bpm;
+					}
+				}
+				else if ((bpm1 > 45 || bpm1 < 200))
+				{
+					bufferAvgB = bpm1;
+				}
+				else
+				{
+					bufferAvgB = bpm1;
+				}
+
+			}
+
+			if (Beats != 0)
+			{
+
+
+			}
+
+			if (RedAvg != 0)
+			{
+				//                    ProgP=inc++/34;;
+				//                    ProgO2.setProgress(ProgP);
+			}
+
+			Interlocked.Exchange(ref processing, 0);
+			return Beats;
 		}
 
 		public int O2Processsing(byte[] data, Size size)
